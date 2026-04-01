@@ -46,18 +46,18 @@ macro_rules! give_role {
 //I need to learn to handle data recieved as parameters from commands
 #[macro_export]
 macro_rules! send_dm {
-    ($ctx: ident, $interaction: ident, $msg: expr) => {
-        let response = InteractionResponse {
-            kind: InteractionResponseType::ChannelMessageWithSource,
-            data: Some(InteractionResponseDataBuilder::new()
-                .content($msg)
-                .build()),
-        };
+    ($ctx: ident, $user_id: ident, $msg: expr) => {
 
-        let _ = $ctx.http
-            .interaction($ctx.application_id)
-            .create_response($interaction.id, &$interaction.token, &response)
-            .await;
+            let channel_id = 
+            match $ctx.http.create_private_channel($user_id).await {
+                Ok(channel) => channel.model().await.unwrap().id,
+                Err(err) => {
+                    eprintln!("Error creating private channel: {:?}", err);
+                    return;
+                }
+            };
+
+        let _ = $ctx.http.create_message(channel_id).content($msg).await;
     };
 }
 

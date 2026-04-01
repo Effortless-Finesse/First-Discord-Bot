@@ -11,6 +11,9 @@ use std::sync::Arc;
 use crate::context::Context;
 use crate::macros;
 
+#[macro_use]
+use crate::send_priv_msg;
+
 pub async fn has_guild_permission(ctx: Arc<Context>, interaction: &Interaction) -> bool {
     if let Some(permissions) = &interaction.member.as_ref().and_then(|m| m.permissions) {
         let is_mod = permissions.contains(Permissions::MANAGE_MESSAGES);
@@ -20,7 +23,7 @@ pub async fn has_guild_permission(ctx: Arc<Context>, interaction: &Interaction) 
             return true;
         }
 
-        crate::send_priv_msg!(ctx, interaction, "You don't have permission to perform this action.");
+        send_priv_msg!(ctx, interaction, "You don't have permission to perform this action.");
 
         return false;
 
@@ -93,6 +96,13 @@ pub fn parameter_to_string(parameter: CommandOptionValue) -> Option<String> {
 pub fn parameter_to_int(parameter: CommandOptionValue) -> Option<i64> {
     match parameter {
         CommandOptionValue::Integer(i) => Some(i),
+        _ => None,
+    }
+}
+
+pub fn parameter_to_user_id(parameter: CommandOptionValue) -> Option<Id<UserMarker>> {
+    match parameter {
+        CommandOptionValue::User(user_id) => Some(user_id),
         _ => None,
     }
 }
