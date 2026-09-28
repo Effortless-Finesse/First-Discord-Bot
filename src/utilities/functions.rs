@@ -1,7 +1,7 @@
 use twilight_model::guild::Permissions;
 use twilight_model::application::interaction::Interaction;
 use twilight_model::id::Id;
-use twilight_model::id::marker::UserMarker;
+use twilight_model::id::marker::{RoleMarker, UserMarker};
 use twilight_model::application::interaction::InteractionData;
 use twilight_model::application::interaction::application_command::CommandOptionValue;
 use twilight_model::http::interaction::{InteractionResponse, InteractionResponseType};
@@ -103,6 +103,13 @@ pub fn parameter_to_int(parameter: CommandOptionValue) -> Option<i64> {
 pub fn parameter_to_user_id(parameter: CommandOptionValue) -> Option<Id<UserMarker>> {
     match parameter {
         CommandOptionValue::User(user_id) => Some(user_id),
+        _ => None,
+    }
+}
+
+pub fn parameter_to_role_id(parameter: CommandOptionValue) -> Option<Id<RoleMarker>> {
+    match parameter {
+        CommandOptionValue::Role(role) => Some(role),
         _ => None,
     }
 }

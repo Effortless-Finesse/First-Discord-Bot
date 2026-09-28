@@ -21,6 +21,13 @@ pub struct ban {
 }
 
 #[derive(CreateCommand)]
+#[command(name = "mute", desc = "Mute a server member")]
+pub struct mute {
+    #[command(desc = "The user to mute")]
+    target_user: ResolvedUser, 
+}
+
+#[derive(CreateCommand)]
 #[command(name = "whisper", desc = "Send a private message to a user")]
 pub struct whisper {
     #[command(desc = "The user to whisper")]
@@ -39,12 +46,14 @@ pub struct addrole {
 }
 
 #[derive(CreateCommand)]
-#[command(name = "createrole", desc = "Create a new role")]
-pub struct createrole {
+#[command(name = "create_role", desc = "Create a new role")]
+pub struct create_role {
     #[command(desc = "The name of the role")]
     role_name: String,
-    #[command(desc = "The color of the role")]
-    role_color: Option<i64>,
+    #[command(desc = "Optional: Colour of the role")]
+    role_color: Option<String>,
+    //#[command(desc = "The color of the role")]
+    //role_color: Option<i64>,
     
 }
 

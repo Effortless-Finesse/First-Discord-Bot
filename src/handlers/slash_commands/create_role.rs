@@ -7,6 +7,7 @@ use twilight_model::http::interaction::{InteractionResponse, InteractionResponse
 use twilight_util::builder::InteractionResponseDataBuilder;
 
 use std::str::FromStr;
+use std::eprintln;
 
 /*
 impl CreateOption for u32 {
@@ -36,13 +37,26 @@ pub async fn create_role_command(ctx: Arc<Context>, interaction: Interaction) {
 
     if let Some(InteractionData::ApplicationCommand(command)) = &interaction.data {
         let role_name: String = parameter_to_string(command.options[0].value.clone()).unwrap();
-        let role_color: Option<i64> = parameter_to_int(command.options[1].value.clone());
+        let role_color: Option<String> = parameter_to_string(command.options[1].value.clone()); //edit to not make it mandatory to recieve a colour option
         let guild_id = interaction.guild_id.unwrap();
         
         match role_color {
             Some(color) => {
-                let role = ctx.http.create_role(guild_id).name(&role_name).color(color as u32).await.expect("Could not create role"); 
-            },
+                
+                let cleaned = color.strip_prefix("#").unwrap_or(&color);
+
+
+/*
+                let role = match u32::from_str_radix(cleaned, 16){ 
+                    
+                    Ok(number) => ctx.http.create_role(guild_id).name(&role_name).color(number).await.expect("Could not create role"),
+
+                    Err(e) => eprintln!("Error while handling the HEX code for role colour"),
+*/
+                let number: u32 = u32::from_str_radix(cleaned, 16).expect("Error while handling the HEX code for role colour");
+                
+                let role = ctx.http.create_role(guild_id).name(&role_name).color(number).await.expect("Could not create role");
+                    },
             None => {
                 let role = ctx.http.create_role(guild_id).name(&role_name).await.expect("Could not create role"); 
             }
