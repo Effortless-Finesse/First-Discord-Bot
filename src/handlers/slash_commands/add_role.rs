@@ -7,6 +7,7 @@ use twilight_model::http::interaction::{InteractionResponse, InteractionResponse
 use twilight_util::builder::InteractionResponseDataBuilder;
 use twilight_model::application::interaction::InteractionType;
 use std::eprintln;
+use twilight_http::request::guild::member::AddRoleToMember;
 
 pub async fn add_role_command(ctx: Arc<Context>, interaction: Interaction) {
     if !has_guild_permission(ctx.clone(), &interaction).await {
@@ -26,7 +27,7 @@ pub async fn add_role_command(ctx: Arc<Context>, interaction: Interaction) {
     if let Some(InteractionData::ApplicationCommand(command)) = &interaction.data {
 
         let role_id = parameter_to_role_id(command.options[1].value.clone()).expect("Could not fetch Role ID");
-    
+
 
 
         match ctx.http.add_guild_member_role(guild_id, target_user_id, role_id).await {

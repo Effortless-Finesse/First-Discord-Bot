@@ -36,7 +36,7 @@ async fn main() -> anyhow::Result<()> {
         application_id,
     });
 
-    let dispatcher = init(ctx.clone()).await.unwrap();
+    let dispatcher = init(ctx.clone()).unwrap();
     
     /*
     let mut events = shard.into_stream();

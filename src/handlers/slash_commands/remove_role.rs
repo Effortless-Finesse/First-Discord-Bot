@@ -5,10 +5,9 @@ use crate::utilities::functions::{get_pinged_user_id, has_guild_permission, para
 use std::sync::Arc;
 use twilight_model::http::interaction::{InteractionResponse, InteractionResponseType};
 use twilight_util::builder::InteractionResponseDataBuilder;
-use twilight_model::application::interaction::InteractionType;
 use std::eprintln;
 
-pub async fn add_role_command(ctx: Arc<Context>, interaction: Interaction) {
+pub async fn remove_role_command(ctx: Arc<Context>, interaction: Interaction) {
     if !has_guild_permission(ctx.clone(), &interaction).await {
         return;
     }
@@ -32,7 +31,7 @@ pub async fn add_role_command(ctx: Arc<Context>, interaction: Interaction) {
         match ctx.http.remove_guild_member_role(guild_id, target_user_id, role_id).await {
             Ok(_) => {
                 let data = InteractionResponseDataBuilder::new()
-                    .content("Role added successfully.")
+                    .content("Role removed successfully.")
                     .build();
                 let response = InteractionResponse {
                     kind: InteractionResponseType::ChannelMessageWithSource,
@@ -44,20 +43,20 @@ pub async fn add_role_command(ctx: Arc<Context>, interaction: Interaction) {
                     .await;
             },
             Err(err) => {
-                eprintln!("Failed to add role: {:?}", err);
+                eprintln!("Failed to remove role: {:?}", err);
             }
         }
     }
 }
 
-pub fn add_role_command_handler(ctx: Arc<Context>, interaction: Interaction) -> HandlerResult {
-    Box::pin(add_role_command(ctx, interaction))
+pub fn remove_role_command_handler(ctx: Arc<Context>, interaction: Interaction) -> HandlerResult {
+    Box::pin(remove_role_command(ctx, interaction))
 }
 
 
 inventory::submit! {
     InteractionHandlerRegistration {
-        name: "addrole",
-        handler: add_role_command_handler,
+        name: "removerole",
+        handler: remove_role_command_handler,
     }
 }

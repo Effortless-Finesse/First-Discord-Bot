@@ -28,6 +28,13 @@ pub struct mute {
 }
 
 #[derive(CreateCommand)]
+#[command(name = "unmute", desc = "Unmute a server member")]
+pub struct unmute {
+    #[command(desc = "The user to unmute")]
+    target_user: ResolvedUser,
+}
+
+#[derive(CreateCommand)]
 #[command(name = "whisper", desc = "Send a private message to a user")]
 pub struct whisper {
     #[command(desc = "The user to whisper")]
